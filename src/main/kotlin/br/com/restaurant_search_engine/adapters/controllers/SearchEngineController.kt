@@ -1,8 +1,10 @@
-package br.com.restaurant_search_engine.adapters.input.controllers
+package br.com.restaurant_search_engine.adapters.controllers
 
-import br.com.restaurant_search_engine.adapters.input.dto.RestaurantInputDTO
+import br.com.restaurant_search_engine.adapters.dto.input.RestaurantInputDTO
+import br.com.restaurant_search_engine.adapters.dto.output.RestaurantOutputDTO
 import br.com.restaurant_search_engine.domain.entities.Restaurant
 import br.com.restaurant_search_engine.domain.ports.`in`.SearchRestaurantUsecase
+import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -13,12 +15,14 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/search")
 class PaymentController(private val searchRestaurantUsecase: SearchRestaurantUsecase) {
 
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     @PostMapping
     fun search(
         @RequestBody requestBody: RestaurantInputDTO
-    ): List<Restaurant> {
+    ): List<RestaurantOutputDTO> {
+        logger.info("received new request: {}", requestBody)
         return searchRestaurantUsecase.search()
     }
-
 
 }

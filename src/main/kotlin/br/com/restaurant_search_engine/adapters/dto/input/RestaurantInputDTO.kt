@@ -1,4 +1,4 @@
-package br.com.restaurant_search_engine.adapters.input.dto
+package br.com.restaurant_search_engine.adapters.dto.input
 
 data class RestaurantInputDTO (
     private val name: String,
