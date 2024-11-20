@@ -2,8 +2,8 @@ package br.com.restaurant_search_engine.adapters.controllers
 
 import br.com.restaurant_search_engine.adapters.dto.input.RestaurantInputDTO
 import br.com.restaurant_search_engine.adapters.dto.output.RestaurantOutputDTO
-import br.com.restaurant_search_engine.domain.entities.Restaurant
 import br.com.restaurant_search_engine.domain.ports.`in`.SearchRestaurantUsecase
+import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -19,7 +19,7 @@ class PaymentController(private val searchRestaurantUsecase: SearchRestaurantUse
 
     @PostMapping
     fun search(
-        @RequestBody requestBody: RestaurantInputDTO
+        @Valid @RequestBody requestBody: RestaurantInputDTO
     ): List<RestaurantOutputDTO> {
         logger.info("received new request: {}", requestBody)
         return searchRestaurantUsecase.search()
