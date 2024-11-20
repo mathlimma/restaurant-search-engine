@@ -1,7 +1,9 @@
 package br.com.restaurant_search_engine.adapters.repositories
 
+import br.com.restaurant_search_engine.adapters.repositories.dao.CuisineDAO
 import br.com.restaurant_search_engine.domain.entities.Cuisine
 import br.com.restaurant_search_engine.domain.ports.out.CuisineRepository
+import br.com.restaurant_search_engine.helper.CsvFileReader
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 
@@ -16,8 +18,8 @@ class CuisineRepositoryImpl : CuisineRepository {
 
     override fun getAllCuisines(): List<Cuisine> {
         logger.info("getting all cuisines")
-        val cuisines = CsvFileReader().readCsvFile<Cuisine>(FILENAME)
-        return cuisines
+        val cuisines = CsvFileReader().readCsvFile<CuisineDAO>(FILENAME)
+        return cuisines.map { it.toDomain() }
     }
 
     override fun getCuisineById(cuisineId: Int): Cuisine? {

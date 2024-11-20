@@ -15,5 +15,5 @@ fun Restaurant.toOutputDTO() = RestaurantOutputDTO(
     customerRating = this.customerRating,
     distance = this.distance,
     price = this.price,
-    cuisine = this.cuisine.name
+    cuisine = this.cuisine.name!!
 )

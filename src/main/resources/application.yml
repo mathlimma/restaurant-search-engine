@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: restaurant-search-engine
+logging:
+  level:
+    br.com.restaurant_search_engine: DEBUG

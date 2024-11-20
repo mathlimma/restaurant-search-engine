@@ -21,7 +21,7 @@ repositories {
 dependencies {
 	// web/common
 	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.2")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
 	// observability
@@ -29,7 +29,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 
 	// csv reader
-	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.18.1")
+	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.11.2")
 
 	// validation
 	implementation("org.springframework.boot:spring-boot-starter-validation:3.3.5")
