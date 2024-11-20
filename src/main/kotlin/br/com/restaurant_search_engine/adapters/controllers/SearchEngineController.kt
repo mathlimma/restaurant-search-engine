@@ -1,7 +1,8 @@
 package br.com.restaurant_search_engine.adapters.controllers
 
-import br.com.restaurant_search_engine.adapters.dto.input.RestaurantInputDTO
-import br.com.restaurant_search_engine.adapters.dto.output.RestaurantOutputDTO
+import br.com.restaurant_search_engine.adapters.controllers.dto.input.RestaurantInputDTO
+import br.com.restaurant_search_engine.adapters.controllers.dto.output.RestaurantOutputDTO
+import br.com.restaurant_search_engine.adapters.controllers.dto.output.toOutputDTO
 import br.com.restaurant_search_engine.domain.ports.`in`.SearchRestaurantUsecase
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
@@ -22,7 +23,8 @@ class PaymentController(private val searchRestaurantUsecase: SearchRestaurantUse
         @Valid @RequestBody requestBody: RestaurantInputDTO
     ): List<RestaurantOutputDTO> {
         logger.info("received new request: {}", requestBody)
-        return searchRestaurantUsecase.search()
+        return searchRestaurantUsecase.search(restaurant = requestBody.toDomain())
+            .map { it.toOutputDTO() }
     }
 
 }

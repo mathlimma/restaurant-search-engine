@@ -1,10 +1,12 @@
 package br.com.restaurant_search_engine.adapters.repositories
 
 import br.com.restaurant_search_engine.domain.entities.Restaurant
-import br.com.restaurant_search_engine.domain.ports.out.RestaurantsRepository
+import br.com.restaurant_search_engine.domain.ports.out.RestaurantRepository
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Repository
 
-class RestaurantRepositoryImpl : RestaurantsRepository {
+@Repository
+class RestaurantRepositoryImpl : RestaurantRepository {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
