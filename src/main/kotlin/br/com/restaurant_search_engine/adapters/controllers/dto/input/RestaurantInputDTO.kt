@@ -2,6 +2,7 @@ package br.com.restaurant_search_engine.adapters.controllers.dto.input
 
 import br.com.restaurant_search_engine.domain.entities.Cuisine
 import br.com.restaurant_search_engine.domain.entities.Restaurant
+import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import org.hibernate.validator.constraints.Length
@@ -11,6 +12,7 @@ data class RestaurantInputDTO(
     @field:Length(min = 0, max = 100)
     val name: String? = null,
 
+    @JsonProperty("customer_rating")
     @field:Min(1) @field:Max(5)
     val customerRating: Double? = null,
 

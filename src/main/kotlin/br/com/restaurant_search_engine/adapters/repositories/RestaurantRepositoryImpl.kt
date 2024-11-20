@@ -2,6 +2,7 @@ package br.com.restaurant_search_engine.adapters.repositories
 
 import br.com.restaurant_search_engine.domain.entities.Restaurant
 import br.com.restaurant_search_engine.domain.ports.out.RestaurantRepository
+import br.com.restaurant_search_engine.helper.CsvFileReader
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 

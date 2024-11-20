@@ -1,9 +1,11 @@
-package br.com.restaurant_search_engine.adapters.repositories
+package br.com.restaurant_search_engine.helper
 
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
 import org.slf4j.LoggerFactory
 import java.io.FileReader
+import java.nio.file.Paths
+
 
 class CsvFileReader {
     val logger = LoggerFactory.getLogger(javaClass)
@@ -11,10 +13,16 @@ class CsvFileReader {
     val csvMapper = CsvMapper()
 
     inline fun <reified T> readCsvFile(fileName: String): List<T> {
-        val filesPath = "files/$fileName"
-        logger.debug("reading file in: {}", filesPath)
 
-        FileReader(filesPath).use { reader ->
+        logger.debug("file to read: {}", fileName)
+
+        val url = javaClass.classLoader.getResource("files/$fileName.csv")
+        val file = Paths.get(url.toURI()).toFile()
+        val absolutePath = file.absolutePath
+
+        logger.debug("reading file in: {}", absolutePath)
+
+        FileReader(absolutePath).use { reader ->
             return csvMapper
                 .readerFor(T::class.java)
                 .with(CsvSchema.emptySchema().withHeader())
