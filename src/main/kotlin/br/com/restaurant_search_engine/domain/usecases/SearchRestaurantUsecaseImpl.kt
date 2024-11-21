@@ -15,8 +15,23 @@ class SearchRestaurantUsecaseImpl(
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    override fun search(restaurant: Restaurant): List<Restaurant> {
-        logger.info("starting search - restaurant: {}", restaurant)
+    override fun search(restaurantSearched: Restaurant): List<Restaurant> {
+        logger.info("starting search - restaurant searched params: {}", restaurantSearched)
+
         return this.restaurantRepository.getAllRestaurants()
     }
+
+    private fun handleFilter(restaurantList: List<Restaurant>, res: Restaurant): List<Restaurant> {
+        logger.debug("filtering by restaurant : {}", res)
+
+        // revisit order
+        return restaurantList.filter {
+             it.cuisine.id == res.cuisine.id
+             && it.name.contains(res.name)
+             && it.customerRating >= res.customerRating
+             && it.distance <= res.distance
+             && it.price <= res.price
+        }
+    }
+
 }
