@@ -10,4 +10,5 @@ class RestaurantDAOOutputDTOSearchEngineApplicationTests {
 	fun contextLoads() {
 	}
 
+	// TODO("unit tests")
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/search")
-class PaymentController(private val searchRestaurantUsecase: SearchRestaurantUsecase) {
+class SearchEngineController(private val searchRestaurantUsecase: SearchRestaurantUsecase) {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
