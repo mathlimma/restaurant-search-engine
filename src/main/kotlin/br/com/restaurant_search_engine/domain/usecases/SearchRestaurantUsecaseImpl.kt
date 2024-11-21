@@ -16,44 +16,63 @@ class SearchRestaurantUsecaseImpl(
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
+    companion object {
+        const val RESTAURANT_SEARCH_LIMIT = 5
+    }
+
     override fun search(restaurantInput: Restaurant): List<Restaurant> {
         logger.info("starting search - restaurant searched params: {}", restaurantInput)
 
-        val cuisines = this.cuisineRepository.getAllCuisines()
+        val cuisine = this.cuisineRepository.getCuisineByName(cuisineName = restaurantInput.cuisine.name!!)
+
+        when (cuisine) {
+            null -> {
+                logger.warn("could not find cuisine : {}", restaurantInput.cuisine.name)
+                throw IllegalArgumentException("could not find cuisine: ${restaurantInput.cuisine.name}")
+            }
+
+            else -> logger.debug("found cuisine : {}", cuisine)
+        }
+
         val restaurants = this.restaurantRepository.getAllRestaurants()
 
-        val restaurantFiltered =
-            this.handleFilter(restaurants = restaurants, cuisines = cuisines, resInput = restaurantInput)
+        val filteredRestaurants =
+            this.handleFilter(restaurants = restaurants, cuisine = cuisine, resInput = restaurantInput)
+        logger.info("filtered restaurants: {}", filteredRestaurants)
 
-        return restaurantFiltered
+        return this.handleSortingAndLimiting(restaurants = filteredRestaurants).also {
+            logger.info("sorted restaurants: {}", it)
+        }
     }
 
     private fun handleFilter(
         restaurants: List<Restaurant>,
-        cuisines: List<Cuisine>,
+        cuisine: Cuisine,
         resInput: Restaurant
     ): List<Restaurant> {
         logger.debug("filtering by restaurant : {}", resInput)
 
-        val cuisine = cuisines.find { it.name?.lowercase() == resInput.cuisine.name?.lowercase() }
-
-        when (cuisine) {
-            null -> {
-                logger.warn("could not find cuisine : {}", resInput.cuisine.name)
-                throw IllegalArgumentException("could not find cuisine: ${resInput.cuisine.name}")
-            }
-        }
-        logger.debug("found cuisine : {}", cuisine)
-
         // revisit order
         return restaurants.filter {
-            it.cuisine.id == cuisine?.id
-                    && it.name.lowercase().contains(resInput.name.lowercase())
+            it.cuisine.id == cuisine.id
                     && it.customerRating >= resInput.customerRating
                     && it.distance <= resInput.distance
                     && it.price <= resInput.price
-        }.map { it.copy(cuisine = cuisine!!) }
+                    && it.name.lowercase().contains(resInput.name.lowercase())
+        }.map { it.copy(cuisine = cuisine) }
+    }
 
+    private fun handleSortingAndLimiting(
+        restaurants: List<Restaurant>
+    ): List<Restaurant> {
+        logger.debug("sorting restaurants: {}", restaurants)
+
+        return restaurants.sortedWith(
+            compareByDescending<Restaurant> { it.distance }
+                .thenBy { it.customerRating }
+                .thenByDescending { it.price }
+        )
+            .take(RESTAURANT_SEARCH_LIMIT)
     }
 
 }

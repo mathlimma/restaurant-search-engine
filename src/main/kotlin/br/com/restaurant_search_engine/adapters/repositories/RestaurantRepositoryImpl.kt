@@ -1,5 +1,7 @@
 package br.com.restaurant_search_engine.adapters.repositories
 
+import br.com.restaurant_search_engine.adapters.repositories.CuisineRepositoryImpl.Companion
+import br.com.restaurant_search_engine.adapters.repositories.dao.CuisineDAO
 import br.com.restaurant_search_engine.adapters.repositories.dao.RestaurantDAO
 import br.com.restaurant_search_engine.domain.entities.Restaurant
 import br.com.restaurant_search_engine.domain.ports.out.RestaurantRepository
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Repository
 class RestaurantRepositoryImpl : RestaurantRepository {
 
     private val logger = LoggerFactory.getLogger(javaClass)
+    private var restaurants: List<RestaurantDAO>? = null
 
     companion object {
         const val FILENAME = "restaurants"
@@ -18,9 +21,14 @@ class RestaurantRepositoryImpl : RestaurantRepository {
 
     override fun getAllRestaurants(): List<Restaurant> {
         logger.info("getting all restaurants")
-        val restaurants = CsvFileReader().readCsvFile<RestaurantDAO>(FILENAME)
-
-        return restaurants.map { it.toDomain() }
+        when (this.restaurants) {
+            null -> {
+                val restaurantList = CsvFileReader().readCsvFile<RestaurantDAO>(FILENAME)
+                this.restaurants = restaurantList
+            }
+            else -> logger.debug("csv file wont be loaded because object is not null: {}", this.restaurants)
+        }
+        return restaurants!!.map { it.toDomain() }
     }
 
 }

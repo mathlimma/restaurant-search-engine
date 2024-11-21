@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository
 class CuisineRepositoryImpl : CuisineRepository {
 
     private val logger = LoggerFactory.getLogger(javaClass)
+    private var cuisines: List<CuisineDAO>? = null
 
     companion object {
         const val FILENAME = "cuisines"
@@ -18,18 +19,24 @@ class CuisineRepositoryImpl : CuisineRepository {
 
     override fun getAllCuisines(): List<Cuisine> {
         logger.info("getting all cuisines")
-        val cuisines = CsvFileReader().readCsvFile<CuisineDAO>(FILENAME)
-        return cuisines.map { it.toDomain() }
+        when (this.cuisines) {
+            null -> {
+                val cuisineList = CsvFileReader().readCsvFile<CuisineDAO>(FILENAME)
+                this.cuisines = cuisineList
+            }
+            else -> logger.debug("csv file wont be loaded because object is not null: {}", this.cuisines)
+        }
+        return this.cuisines!!.map { it.toDomain() }
     }
 
-    override fun getCuisineById(cuisineId: Int): Cuisine? {
-        logger.info("getting cuisine with id: {}", cuisineId)
+    override fun getCuisineByName(cuisineName: String): Cuisine? {
+        logger.info("getting cuisine with id: {}", cuisineName)
 
         val cuisine = this.getAllCuisines()
-            .find { it.id == cuisineId }
+            .find { it.name!!.lowercase() == cuisineName.lowercase() }
 
         if (cuisine == null) {
-            logger.warn("Could not find cuisine with id: {}", cuisineId)
+            logger.warn("Could not find cuisine with id: {}", cuisineName)
         }
 
         return cuisine

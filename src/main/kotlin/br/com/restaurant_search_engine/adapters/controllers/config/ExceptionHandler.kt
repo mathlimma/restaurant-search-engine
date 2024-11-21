@@ -1,5 +1,6 @@
 package br.com.restaurant_search_engine.adapters.controllers.config
 
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -12,6 +13,8 @@ import java.time.format.DateTimeFormatter
 @RestControllerAdvice
 class GlobalExceptionHandler {
 
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleIllegalArgumentException(
         ex: IllegalArgumentException,
@@ -22,6 +25,7 @@ class GlobalExceptionHandler {
             status = HttpStatus.BAD_REQUEST.value(),
             timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         )
+        logger.warn("IllegalArgumentException found: {}", ex.message)
         return ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST)
     }
 
@@ -35,6 +39,7 @@ class GlobalExceptionHandler {
             status = HttpStatus.BAD_REQUEST.value(),
             timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         )
+        logger.warn("MethodArgumentNotValidException found: {}", ex.message)
         return ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST)
     }
 
@@ -48,6 +53,7 @@ class GlobalExceptionHandler {
             status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
             timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         )
+        logger.error("Generic error found: {}", ex.stackTrace)
         return ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }
