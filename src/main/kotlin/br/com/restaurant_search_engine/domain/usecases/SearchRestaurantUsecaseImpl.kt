@@ -1,5 +1,6 @@
 package br.com.restaurant_search_engine.domain.usecases
 
+import br.com.restaurant_search_engine.domain.entities.Cuisine
 import br.com.restaurant_search_engine.domain.entities.Restaurant
 import br.com.restaurant_search_engine.domain.ports.`in`.SearchRestaurantUsecase
 import br.com.restaurant_search_engine.domain.ports.out.CuisineRepository
@@ -15,23 +16,44 @@ class SearchRestaurantUsecaseImpl(
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    override fun search(restaurantSearched: Restaurant): List<Restaurant> {
-        logger.info("starting search - restaurant searched params: {}", restaurantSearched)
+    override fun search(restaurantInput: Restaurant): List<Restaurant> {
+        logger.info("starting search - restaurant searched params: {}", restaurantInput)
 
-        return this.restaurantRepository.getAllRestaurants()
+        val cuisines = this.cuisineRepository.getAllCuisines()
+        val restaurants = this.restaurantRepository.getAllRestaurants()
+
+        val restaurantFiltered =
+            this.handleFilter(restaurants = restaurants, cuisines = cuisines, resInput = restaurantInput)
+
+        return restaurantFiltered
     }
 
-    private fun handleFilter(restaurantList: List<Restaurant>, res: Restaurant): List<Restaurant> {
-        logger.debug("filtering by restaurant : {}", res)
+    private fun handleFilter(
+        restaurants: List<Restaurant>,
+        cuisines: List<Cuisine>,
+        resInput: Restaurant
+    ): List<Restaurant> {
+        logger.debug("filtering by restaurant : {}", resInput)
+
+        val cuisine = cuisines.find { it.name?.lowercase() == resInput.cuisine.name?.lowercase() }
+
+        when (cuisine) {
+            null -> {
+                logger.warn("could not find cuisine : {}", resInput.cuisine.name)
+                throw IllegalArgumentException("could not find cuisine: ${resInput.cuisine.name}")
+            }
+        }
+        logger.debug("found cuisine : {}", cuisine)
 
         // revisit order
-        return restaurantList.filter {
-             it.cuisine.id == res.cuisine.id
-             && it.name.contains(res.name)
-             && it.customerRating >= res.customerRating
-             && it.distance <= res.distance
-             && it.price <= res.price
-        }
+        return restaurants.filter {
+            it.cuisine.id == cuisine?.id
+                    && it.name.lowercase().contains(resInput.name.lowercase())
+                    && it.customerRating >= resInput.customerRating
+                    && it.distance <= resInput.distance
+                    && it.price <= resInput.price
+        }.map { it.copy(cuisine = cuisine!!) }
+
     }
 
 }

@@ -23,8 +23,11 @@ class PaymentController(private val searchRestaurantUsecase: SearchRestaurantUse
         @Valid @RequestBody requestBody: RestaurantInputDTO
     ): List<RestaurantOutputDTO> {
         logger.info("received new request: {}", requestBody)
-        return searchRestaurantUsecase.search(restaurantSearched = requestBody.toDomain())
+        val results = searchRestaurantUsecase.search(restaurantInput = requestBody.toDomain())
             .map { it.toOutputDTO() }
+
+        logger.info("search results to be returned: {}", results)
+        return results
     }
 
 }
