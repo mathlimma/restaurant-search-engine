@@ -2,17 +2,17 @@ package br.com.restaurant_search_engine.domain.usecases
 
 import br.com.restaurant_search_engine.domain.entities.Cuisine
 import br.com.restaurant_search_engine.domain.entities.Restaurant
-import br.com.restaurant_search_engine.domain.ports.`in`.SearchRestaurantUsecase
+import br.com.restaurant_search_engine.domain.ports.`in`.RestaurantSearchUsecase
 import br.com.restaurant_search_engine.domain.ports.out.CuisineRepository
 import br.com.restaurant_search_engine.domain.ports.out.RestaurantRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class SearchRestaurantUsecaseImpl(
+class RestaurantSearchUsecaseImpl(
     private val restaurantRepository: RestaurantRepository,
     private val cuisineRepository: CuisineRepository
-) : SearchRestaurantUsecase {
+) : RestaurantSearchUsecase {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -52,7 +52,6 @@ class SearchRestaurantUsecaseImpl(
     ): List<Restaurant> {
         logger.debug("filtering by restaurant : {}", resInput)
 
-        // revisit order
         return restaurants.filter {
             it.cuisine.id == cuisine.id
                     && it.customerRating >= resInput.customerRating
@@ -68,9 +67,9 @@ class SearchRestaurantUsecaseImpl(
         logger.debug("sorting restaurants: {}", restaurants)
 
         return restaurants.sortedWith(
-            compareByDescending<Restaurant> { it.distance }
-                .thenBy { it.customerRating }
-                .thenByDescending { it.price }
+            compareBy<Restaurant> { it.distance }
+                .thenByDescending { it.customerRating } // TODO test scenarious
+                .thenBy { it.price } // TODO test scenarious
         )
             .take(RESTAURANT_SEARCH_LIMIT)
     }
