@@ -1,7 +1,5 @@
 package br.com.restaurant_search_engine.adapters.repositories
 
-import br.com.restaurant_search_engine.adapters.repositories.CuisineRepositoryImpl.Companion
-import br.com.restaurant_search_engine.adapters.repositories.dao.CuisineDAO
 import br.com.restaurant_search_engine.adapters.repositories.dao.RestaurantDAO
 import br.com.restaurant_search_engine.domain.entities.Restaurant
 import br.com.restaurant_search_engine.domain.ports.out.RestaurantRepository
@@ -10,7 +8,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 
 @Repository
-class RestaurantRepositoryImpl : RestaurantRepository {
+class RestaurantRepositoryImpl(private val csvFileReader: CsvFileReader) : RestaurantRepository {
 
     private val logger = LoggerFactory.getLogger(javaClass)
     private var restaurants: List<RestaurantDAO>? = null
@@ -23,10 +21,10 @@ class RestaurantRepositoryImpl : RestaurantRepository {
         logger.info("getting all restaurants")
         when (this.restaurants) {
             null -> {
-                val restaurantList = CsvFileReader().readCsvFile<RestaurantDAO>(FILENAME)
+                val restaurantList = csvFileReader.readCsvFile(FILENAME, RestaurantDAO::class.java)
                 this.restaurants = restaurantList
             }
-            else -> logger.debug("csv file wont be loaded because object is not null: {}", this.restaurants)
+            else -> logger.debug("csv file wont be loaded - cache hit: {}", this.restaurants)
         }
         return restaurants!!.map { it.toDomain() }
     }

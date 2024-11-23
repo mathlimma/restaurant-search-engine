@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Min
 import org.hibernate.validator.constraints.Length
 
 data class RestaurantInputDTO(
-
+    // TODO (test scenarious where user does not send all input parameters)
     @field:Length(min = 0, max = 100)
     val name: String? = null,
 

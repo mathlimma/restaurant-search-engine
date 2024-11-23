@@ -49,7 +49,7 @@ class GlobalExceptionHandler {
         request: WebRequest
     ): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(
-            message = ex.message ?: "An unexpected error occurred",
+            message = "An unexpected error occurred",
             status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
             timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         )
