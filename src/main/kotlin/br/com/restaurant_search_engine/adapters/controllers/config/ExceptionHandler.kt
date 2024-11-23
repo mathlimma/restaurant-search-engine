@@ -35,7 +35,7 @@ class GlobalExceptionHandler {
         request: WebRequest
     ): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(
-            message = ex.message ?: "Invalid argument",
+            message = ex.detailMessageArguments[1].toString() ?: "Invalid argument",
             status = HttpStatus.BAD_REQUEST.value(),
             timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         )

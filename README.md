@@ -20,7 +20,7 @@ by Matheus de Andrade Lima
 ## Running application
 
 * To run this project you must have the programs below installed on your local machine.
-    - java
+    - java17+
     - docker
 
 Run the command bellow to install necessary dependencies and images to deploy on docker using docker-compose.
@@ -39,5 +39,13 @@ To stop you can run
 ```
 sudo docker-compose -f docker-compose.yml down
 ```
+## Tests
+
+* this repository has 91% of total coverage
+* 
+![test_summary](./images/test_summary.png)
+
+![jacoco_test_results](./images/jacoco_test_results.png)
+
 
 This project benefits from [OpenTelemetry](https://opentelemetry.io/) as a generic way to collect and send spans to tracers.

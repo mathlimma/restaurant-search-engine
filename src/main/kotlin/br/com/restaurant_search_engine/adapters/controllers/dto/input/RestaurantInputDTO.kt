@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import org.hibernate.validator.constraints.Length
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class RestaurantInputDTO(
 
     // TODO add only non null attributes to payload

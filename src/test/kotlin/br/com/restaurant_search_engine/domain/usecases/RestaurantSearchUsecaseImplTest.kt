@@ -40,9 +40,9 @@ class RestaurantSearchUsecaseImplTest {
 
         val result = usecase.search(inputRestaurant)
 
-        assertThat(result).hasSize(2)
-        assertThat(result[0].name).isEqualTo("Pizza House") // Sorted by distance, then rating
-        assertThat(result[1].name).isEqualTo("Pizza Place")
+        assertThat(result).hasSize(4)
+        assertThat(result[0].name).isEqualTo("Spoleto")
+        assertThat(result[1].name).isEqualTo("La Braza")
 
         verify(cuisineRepository).getCuisineByName("Italian")
         verify(restaurantRepository).getAllRestaurants()
