@@ -4,8 +4,18 @@ by Matheus de Andrade Lima
 
 ## Assumptions
 
-- Lowercase and uppercase don`t matter for string inputs
-- Restaurants.csv and cuisine.csv files won`t be updated during program execution
+- Lowercase and uppercase don`t matter for string inputs.
+  e.g. italian/Italian 
+
+- Restaurants.csv and cuisine.csv files won`t be updated during program execution, then I can cache for better performance.
+
+- Max length for string inputs is 100 characters then I can avoid some vulnerabilities.
+  https://en.wikipedia.org/wiki/Improper_input_validation
+
+- If the user does not specify a field, default value will be the less restrictive allowed value for that field.
+  e.g. default value for price: 50
+
+- Numeric inputs type is set as Double in case we need to change and adapt to this functionality in the future.
 
 ## Running application
 

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 
 @Repository
-class CuisineRepositoryImpl : CuisineRepository {
+class CuisineRepositoryImpl(private val csvFileReader: CsvFileReader) : CuisineRepository {
 
     private val logger = LoggerFactory.getLogger(javaClass)
     private var cuisines: List<CuisineDAO>? = null
@@ -21,10 +21,11 @@ class CuisineRepositoryImpl : CuisineRepository {
         logger.info("getting all cuisines")
         when (this.cuisines) {
             null -> {
-                val cuisineList = CsvFileReader().readCsvFile<CuisineDAO>(FILENAME)
+                val cuisineList = csvFileReader.readCsvFile(FILENAME, CuisineDAO::class.java)
                 this.cuisines = cuisineList
             }
-            else -> logger.debug("csv file wont be loaded because object is not null: {}", this.cuisines)
+
+            else -> logger.debug("csv file wont be loaded - cache hit: {}", this.cuisines)
         }
         return this.cuisines!!.map { it.toDomain() }
     }

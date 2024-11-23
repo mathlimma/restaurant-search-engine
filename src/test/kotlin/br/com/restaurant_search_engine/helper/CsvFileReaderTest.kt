@@ -13,7 +13,7 @@ class CsvFileReaderTest {
     @Test
     fun `should read and parse CSV file correctly`() {
 
-        val result: List<TestData> = csvFileReader.readCsvFile("test_data")
+        val result = csvFileReader.readCsvFile("test_data", TestData::class.java)
 
         assertThat(result).hasSize(2)
         assertThat(result[0]).isEqualTo(TestData(name = "Alice", age = 30, city = "New York"))
@@ -24,7 +24,7 @@ class CsvFileReaderTest {
     @Test
     fun `should throw exception when file is not found`() {
         val exception = assertThrows(IllegalArgumentException::class.java) {
-            csvFileReader.readCsvFile<TestData>("non_existent_file")
+            csvFileReader.readCsvFile("non_existent_file", TestData::class.java)
         }
 
         assertThat(exception.message).isEqualTo("Resource not found: files/non_existent_file.csv")

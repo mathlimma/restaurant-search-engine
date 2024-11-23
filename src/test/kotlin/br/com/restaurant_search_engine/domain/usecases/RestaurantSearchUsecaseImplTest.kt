@@ -27,7 +27,7 @@ class RestaurantSearchUsecaseImplTest {
 
     @BeforeEach
     fun setup() {
-        cuisine = Utils.cuisine
+        cuisine = Utils.italianCuisine
         allRestaurants = Utils.allRestaurants
         inputRestaurant = Utils.inputRestaurant
     }

@@ -50,7 +50,7 @@ class RestaurantSearchUsecaseImpl(
         cuisine: Cuisine,
         resInput: Restaurant
     ): List<Restaurant> {
-        logger.debug("filtering by restaurant : {}", resInput)
+        logger.debug("filtering by restaurant input: {}", resInput)
 
         return restaurants.filter {
             it.cuisine.id == cuisine.id

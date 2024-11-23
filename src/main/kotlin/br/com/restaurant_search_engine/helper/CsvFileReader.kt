@@ -4,15 +4,17 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Component
 import java.io.InputStream
 
-
+@Component
 class CsvFileReader {
-    val logger = LoggerFactory.getLogger(javaClass)
 
-    val csvMapper = CsvMapper().registerKotlinModule()
+    private val logger = LoggerFactory.getLogger(CsvFileReader::class.java)
 
-    inline fun <reified T : Any> readCsvFile(fileName: String): List<T> {
+    fun <T : Any> readCsvFile(fileName: String, clazz: Class<T>): List<T> {
+        val csvMapper = CsvMapper().registerKotlinModule()
+
         logger.debug("File to read: {}", fileName)
 
         val resourcePath = "files/$fileName.csv"
@@ -23,7 +25,7 @@ class CsvFileReader {
 
         inputStream.use { stream ->
             return csvMapper
-                .readerFor(T::class.java)
+                .readerFor(clazz)
                 .with(CsvSchema.emptySchema().withHeader())
                 .readValues<T>(stream)
                 .readAll()
