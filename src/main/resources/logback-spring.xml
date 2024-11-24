@@ -24,9 +24,24 @@
         </format>
     </appender>
 
-    <logger name="br.com.restaurant_search_engine" level="DEBUG" />
-    <root level="INFO">
-        <appender-ref ref="LOKI" />
-    </root>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%-5relative %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <springProfile name="prod">
+        <logger name="br.com.restaurant_search_engine" level="DEBUG"/>
+        <root level="INFO">
+            <appender-ref ref="LOKI"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="local">
+        <logger name="br.com.restaurant_search_engine" level="DEBUG"/>
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </root>
+    </springProfile>
 
 </configuration>
