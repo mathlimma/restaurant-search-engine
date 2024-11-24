@@ -68,8 +68,8 @@ class RestaurantSearchUsecaseImpl(
 
         return restaurants.sortedWith(
             compareBy<Restaurant> { it.distance }
-                .thenByDescending { it.customerRating } // TODO test scenarious
-                .thenBy { it.price } // TODO test scenarious
+                .thenByDescending { it.customerRating }
+                .thenBy { it.price }
         )
             .take(RESTAURANT_SEARCH_LIMIT)
     }

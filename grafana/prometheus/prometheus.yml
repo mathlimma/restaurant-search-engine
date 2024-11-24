@@ -1,0 +1,8 @@
+scrape_configs:
+  - job_name: 'RestaurantSearchMetrics'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 3s
+    static_configs:
+      - targets: ['restaurant-search-engine:8080']
+        labels:
+          application: 'restaurant-search-engine'

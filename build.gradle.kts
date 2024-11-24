@@ -26,9 +26,9 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
 	// observability
-	implementation("io.micrometer:micrometer-tracing-bridge-brave")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("com.github.loki4j:loki-logback-appender:1.4.1")
+	implementation("io.micrometer:micrometer-registry-prometheus")
 
 	// csv reader
 	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.11.2")

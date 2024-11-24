@@ -11,5 +11,6 @@ CMD java -Dotel.traces.exporter=jaeger \
          -Dapplication.home=/app/bin/ \
          -Dapplication.name=restaurant-search-engine \
          -javaagent:/app/bin/opentelemetry-javaagent.jar \
+         -Dspring.profiles.active=prod \
          -jar \
          /app/bin/app.jar

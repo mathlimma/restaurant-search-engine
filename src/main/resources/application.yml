@@ -6,8 +6,3 @@ logging:
   level:
     br.com.restaurant_search_engine: DEBUG
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
