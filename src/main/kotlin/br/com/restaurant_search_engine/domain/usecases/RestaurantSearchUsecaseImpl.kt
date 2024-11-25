@@ -23,21 +23,17 @@ class RestaurantSearchUsecaseImpl(
     override fun search(restaurantInput: Restaurant): List<Restaurant> {
         logger.info("starting search - restaurant searched params: {}", restaurantInput)
 
-        val cuisine = this.cuisineRepository.getCuisineByName(cuisineName = restaurantInput.cuisine.name!!)
+        val cuisines = this.cuisineRepository.getCuisinesByName(cuisineName = restaurantInput.cuisine.name!!)
 
-        when (cuisine) {
-            null -> {
-                logger.warn("could not find cuisine : {}", restaurantInput.cuisine.name)
-                throw IllegalArgumentException("could not find cuisine: ${restaurantInput.cuisine.name}")
-            }
-
-            else -> logger.debug("found cuisine : {}", cuisine)
+        if (cuisines.isEmpty()) {
+            logger.warn("could not find any cuisines by : {}", restaurantInput.cuisine.name)
+            throw IllegalArgumentException("could not find any cuisines by: ${restaurantInput.cuisine.name}")
         }
 
         val restaurants = this.restaurantRepository.getAllRestaurants()
 
         val filteredRestaurants =
-            this.handleFilter(restaurants = restaurants, cuisine = cuisine, resInput = restaurantInput)
+            this.handleFilter(restaurants = restaurants, cuisines = cuisines, resInput = restaurantInput)
         logger.info("filtered restaurants: {}", filteredRestaurants)
 
         return this.handleSortingAndLimiting(restaurants = filteredRestaurants).also {
@@ -47,18 +43,21 @@ class RestaurantSearchUsecaseImpl(
 
     private fun handleFilter(
         restaurants: List<Restaurant>,
-        cuisine: Cuisine,
+        cuisines: List<Cuisine>,
         resInput: Restaurant
     ): List<Restaurant> {
         logger.debug("filtering by restaurant input: {}", resInput)
 
         return restaurants.filter {
-            it.cuisine.id == cuisine.id
-                    && it.customerRating >= resInput.customerRating
+            it.customerRating >= resInput.customerRating
                     && it.distance <= resInput.distance
                     && it.price <= resInput.price
                     && it.name.lowercase().contains(resInput.name.lowercase())
-        }.map { it.copy(cuisine = cuisine) }
+                    && cuisines.any { cuisine -> cuisine.id == it.cuisine.id }
+        }.map { restaurant ->
+            val matchedCuisine = cuisines.find { cuisine -> cuisine.id == restaurant.cuisine.id }
+            matchedCuisine?.let { restaurant.copy(cuisine = matchedCuisine) } ?: restaurant
+        }
     }
 
     private fun handleSortingAndLimiting(

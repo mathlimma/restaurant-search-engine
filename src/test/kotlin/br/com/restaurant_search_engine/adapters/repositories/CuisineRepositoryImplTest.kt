@@ -59,33 +59,33 @@ class CuisineRepositoryImplTest {
     }
 
     @Test
-    fun `should return cuisine by name`() {
+    fun `should return cuisines by name`() {
         `when`(csvFileReader.readCsvFile(FILENAME, CuisineDAO::class.java)).thenReturn(Utils.mockCuisines)
 
-        val cuisine = cuisineRepository.getCuisineByName("Japanese")
+        val cuisines = cuisineRepository.getCuisinesByName("Japanese")
 
-        assertThat(cuisine).isNotNull
-        assertThat(cuisine!!.id).isEqualTo(2)
-        assertThat(cuisine.name).isEqualTo("Japanese")
+        assertThat(cuisines).isNotNull
+        assertThat(cuisines.first().id).isEqualTo(2)
+        assertThat(cuisines.first().name).isEqualTo("Japanese")
     }
 
     @Test
     fun `should return null if cuisine name does not exist`() {
         `when`(csvFileReader.readCsvFile(FILENAME, CuisineDAO::class.java)).thenReturn(Utils.mockCuisines)
 
-        val cuisine = cuisineRepository.getCuisineByName("Korean")
+        val cuisine = cuisineRepository.getCuisinesByName("Korean")
 
-        assertThat(cuisine).isNull()
+        assertThat(cuisine).isEmpty()
     }
 
     @Test
     fun `should handle case-insensitive cuisine name lookup`() {
         `when`(csvFileReader.readCsvFile(FILENAME, CuisineDAO::class.java)).thenReturn(Utils.mockCuisines)
 
-        val cuisine = cuisineRepository.getCuisineByName("jApAnEsE")
+        val cuisines = cuisineRepository.getCuisinesByName("jApAnEsE")
 
-        assertThat(cuisine).isNotNull
-        assertThat(cuisine!!.id).isEqualTo(2)
-        assertThat(cuisine.name).isEqualTo("Japanese")
+        assertThat(cuisines).isNotNull
+        assertThat(cuisines.first().id).isEqualTo(2)
+        assertThat(cuisines.first().name).isEqualTo("Japanese")
     }
 }

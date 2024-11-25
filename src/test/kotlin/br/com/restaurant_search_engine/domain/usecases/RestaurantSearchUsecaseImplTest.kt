@@ -35,7 +35,7 @@ class RestaurantSearchUsecaseImplTest {
     @Test
     fun `should return filtered and sorted restaurants when all criteria match`() {
 
-        whenever(cuisineRepository.getCuisineByName("Italian")).thenReturn(cuisine)
+        whenever(cuisineRepository.getCuisinesByName("Italian")).thenReturn(listOf(cuisine))
         whenever(restaurantRepository.getAllRestaurants()).thenReturn(allRestaurants)
 
         val result = usecase.search(inputRestaurant)
@@ -44,23 +44,23 @@ class RestaurantSearchUsecaseImplTest {
         assertThat(result[0].name).isEqualTo("Spoleto")
         assertThat(result[1].name).isEqualTo("La Braza")
 
-        verify(cuisineRepository).getCuisineByName("Italian")
+        verify(cuisineRepository).getCuisinesByName("Italian")
         verify(restaurantRepository).getAllRestaurants()
     }
 
     @Test
-    fun `should throw exception when cuisine is not found`() {
+    fun `should throw exception when cuisine list is empty`() {
 
         inputRestaurant = inputRestaurant.copy(cuisine = Cuisine(name = "Unknown"))
 
-        whenever(cuisineRepository.getCuisineByName("Unknown")).thenReturn(null)
+        whenever(cuisineRepository.getCuisinesByName("Unknown")).thenReturn(listOf())
 
         val exception = assertThrows(IllegalArgumentException::class.java) {
             usecase.search(inputRestaurant)
         }
 
-        assertThat(exception.message).isEqualTo("could not find cuisine: Unknown")
-        verify(cuisineRepository).getCuisineByName("Unknown")
+        assertThat(exception.message).isEqualTo("could not find any cuisines by: Unknown")
+        verify(cuisineRepository).getCuisinesByName("Unknown")
         verifyNoInteractions(restaurantRepository)
     }
 
@@ -68,13 +68,13 @@ class RestaurantSearchUsecaseImplTest {
     fun `should return an empty list when no restaurants match criteria`() {
         inputRestaurant = inputRestaurant.copy(name = "MacDonald's")
 
-        whenever(cuisineRepository.getCuisineByName("Italian")).thenReturn(cuisine)
+        whenever(cuisineRepository.getCuisinesByName("Italian")).thenReturn(listOf(cuisine))
         whenever(restaurantRepository.getAllRestaurants()).thenReturn(allRestaurants)
 
         val result = usecase.search(inputRestaurant)
 
         assertThat(result).isEmpty()
-        verify(cuisineRepository).getCuisineByName("Italian")
+        verify(cuisineRepository).getCuisinesByName("Italian")
         verify(restaurantRepository).getAllRestaurants()
     }
 
@@ -87,13 +87,13 @@ class RestaurantSearchUsecaseImplTest {
             Restaurant(name = "Restaurant", cuisine = cuisine, customerRating = 5.0, distance = 5.0, price = 10.0)
         }
 
-        whenever(cuisineRepository.getCuisineByName("Italian")).thenReturn(cuisine)
+        whenever(cuisineRepository.getCuisinesByName("Italian")).thenReturn(listOf(cuisine))
         whenever(restaurantRepository.getAllRestaurants()).thenReturn(allRestaurants)
 
         val result = usecase.search(inputRestaurant)
 
         assertThat(result).hasSize(RestaurantSearchUsecaseImpl.RESTAURANT_SEARCH_LIMIT)
-        verify(cuisineRepository).getCuisineByName("Italian")
+        verify(cuisineRepository).getCuisinesByName("Italian")
         verify(restaurantRepository).getAllRestaurants()
     }
 }

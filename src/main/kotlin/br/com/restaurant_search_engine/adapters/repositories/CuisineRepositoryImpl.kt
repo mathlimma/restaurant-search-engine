@@ -30,16 +30,12 @@ class CuisineRepositoryImpl(private val csvFileReader: CsvFileReader) : CuisineR
         return this.cuisines!!.map { it.toDomain() }
     }
 
-    override fun getCuisineByName(cuisineName: String): Cuisine? {
-        logger.info("getting cuisine with id: {}", cuisineName)
+    override fun getCuisinesByName(cuisineName: String): List<Cuisine> {
+        logger.info("getting cuisines by name: {}", cuisineName)
 
-        val cuisine = this.getAllCuisines()
-            .find { it.name!!.lowercase() == cuisineName.lowercase() }
+        val cuisines = this.getAllCuisines()
+            .filter { it.name!!.lowercase().contains(cuisineName.lowercase()) }
 
-        if (cuisine == null) {
-            logger.warn("Could not find cuisine with id: {}", cuisineName)
-        }
-
-        return cuisine
+        return cuisines.also { logger.info("cuisines : {}", cuisineName) }
     }
 }

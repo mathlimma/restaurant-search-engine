@@ -15,8 +15,10 @@ I believe these skills are really important to developing robust, reliable and r
 - Max length for string inputs is 100 characters then I can avoid some vulnerabilities.
   https://en.wikipedia.org/wiki/Improper_input_validation
 
+- Null values won't be accepted, user might not send a field, then it will be defined a default value.
+
 - If the user does not specify a field, default value will be the less restrictive allowed value for that field.
-  e.g. default value for price: 50
+  e.g. default value for price: 50 / default value for customer rating: 1
 
 - Numeric inputs type is set as Double in case we need to change and adapt to this functionality in the future.
 
